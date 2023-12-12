@@ -4,14 +4,14 @@ import { get, set } from "./database";
 import { save_data, load_data } from "./persistance";
 import { waterbase_version_html } from "./version";
 
-const server: Server = createServer(3000);
-
-//let auth_tokens: Array<string> = generate_auth_tokens(100);
-let auth_tokens: Array<string> = ["V6TvuJ6IhaE7LavkJy4xJoPkNFuckTleuNpKslXjPTIWbcYLu0JvnNV8dLzRD8fXN4uCEOhcr3yeyb4SiEiwVSSweRyGuuM8dPkk"];
+const port: number = 3000;
+const server: Server = createServer(port);
+//const auth_tokens: Array<string> = generate_auth_tokens(100);
+const auth_tokens: Array<string> = ["V6TvuJ6IhaE7LavkJy4xJoPkNFuckTleuNpKslXjPTIWbcYLu0JvnNV8dLzRD8fXN4uCEOhcr3yeyb4SiEiwVSSweRyGuuM8dPkk"];
+const save_file_path: string = "./save.json";
 
 let data: object = {};
 
-let save_file_path: string = "./save.json";
 
 addAPIEndpoint(server, '/data', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
@@ -175,3 +175,5 @@ ${JSON.stringify(server.ip_data, null, 4)}
 console.log("AUTH TOKENS: " + auth_tokens);
 
 server.start();
+
+console.log(`View the dashboard at http://localhost:${server._port}/`);

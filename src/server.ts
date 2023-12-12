@@ -20,8 +20,7 @@ export function createServer(port: number): Server {
     return {
         start() {
             this._running_server_instance = this._server.listen(this._port, () => {
-                console.log(`Server is running on port ${this._port} here:`);
-                console.log(this.ip_data)
+                console.log(`Server is listening on port ${this._port}`);
             });
         },
         stop() {

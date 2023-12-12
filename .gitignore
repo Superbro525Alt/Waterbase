@@ -131,3 +131,7 @@ dist
 
 # Editor Config
 .idea
+
+# Compiled js
+*.js
+**/*.js
