@@ -1,66 +1,122 @@
 import {Server, createServer, addPage, addAPIEndpoint } from './server';
-import { generate_auth_token } from './utils';
+import { generate_auth_token, validate_token } from './authentication';
+import { get, set } from "./database";
+import { save_data, load_data } from "./persistance";
+import { waterbase_version_html } from "./version";
 
 const server: Server = createServer(3000);
 
-let auth_token = generate_auth_token(100);
+//let auth_tokens: Array<string> = generate_auth_tokens(100);
+let auth_tokens: Array<string> = ["V6TvuJ6IhaE7LavkJy4xJoPkNFuckTleuNpKslXjPTIWbcYLu0JvnNV8dLzRD8fXN4uCEOhcr3yeyb4SiEiwVSSweRyGuuM8dPkk"];
 
-let data: object = {
-
-};
+let data: object = {};
 
 addAPIEndpoint(server, '/data', (_req: any, res: any) => {
-    if (_req.query.token == auth_token) {
+    if (validate_token(_req.query.token, auth_tokens)) {
         res.send(data);
+        res.status(200)
     } else {
         res.send("Invalid token");
+        res.status(401)
     }
 });
 
 addAPIEndpoint(server, '/set', (_req: any, res: any) => {
-    if (_req.query.token == auth_token) {
-        // use a path to get a location in the data dictionary
-        // a path will be like path/to/data and turn it into data[path][to][data]
+    console.log(validate_token(_req.query.token, auth_tokens))
+    console.log(_req.query.token);
+    console.log(auth_tokens)
+    if (validate_token(_req.query.token, auth_tokens)) {
+
         let path: string = _req.query.path;
         let value: string = _req.query.value;
 
         let path_list: Array<string> = path.split("/");
 
-        let current_data: object = data;
+        set(data, path_list, value)
 
-        for (let i = 0; i < path_list.length - 1; i++) {
-            let path_part: string = path_list[i];
-
-            if (current_data[path_part] === undefined) {
-                current_data[path_part] = {};
-            }
-
-            current_data = current_data[path_part];
-
-            console.log(current_data)
-        }
-        // if current_data is not an object, then we need to make it one
-        if (typeof current_data !== "object" || current_data === undefined) {
-            current_data = {};
-        }
-
-        current_data[path_list[path_list.length - 1]] = value;
-
-        // set data[path][to][data] to value
-        for (let i = 0; i < path_list.length - 1; i++) {
-            let path_part: string = path_list[i];
-
-            data[path_part] = current_data;
-        }
-
-
-
-        res.send("Success");
+        res.send(data);
+        res.status(200);
     } else {
         res.send("Invalid token");
+        res.status(401);
     }
 });
 
-console.log("AUTH TOKEN: " + auth_token);
+addAPIEndpoint(server, '/get', (_req: any, res: any) => {
+    if (validate_token(_req.query.token, auth_tokens)) {
+        let path =  _req.query.path;
+
+        let path_list: Array<string> = path.split("/")
+
+        let value = get(data, path_list, undefined);
+
+        if (value == undefined) {
+            res.send("Value not found");
+            res.status(404);
+            return;
+        }
+        res.send(value);
+        res.status(200)
+    } else {
+        res.send("Invalid token");
+        res.status(401);
+    }
+});
+
+addAPIEndpoint(server, '/delete', (_req: any, res: any) => {
+    if (validate_token(_req.query.token, auth_tokens)) {
+        let path: string = _req.query.path;
+
+        let path_list: Array<string> = path.split("/");
+
+        set(data, path_list, undefined);
+
+        res.send(data);
+        res.status(200);
+    } else {
+        res.send("Invalid token");
+        res.status(401);
+    }
+});
+
+server._server.get('/', (_req: any, res: any) => {
+    res.send(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Database</title>
+</head>
+<body>
+    <!-- make it look cool and have different status codes for different things -->
+    <pre>${waterbase_version_html()}</pre>
+    
+    <p>Server is running on port ${server._port}</p>
+    <p>Server is running with the ip(s): 
+        <pre>
+${JSON.stringify(server.ip_data, null, 4)}
+        </pre>
+    </p>
+    
+    <p>Auth tokens:</p>
+    <ul>
+        ${auth_tokens.map((token) => {
+        return `<li>${token}</li>`
+    }).join("")}
+    </ul>
+    
+    <p>Data:</p>
+    <pre>${JSON.stringify(data, null, 4)}</pre>
+    </body>
+<style>
+    body {
+        font-family: sans-serif;
+    }
+</style>
+</html>
+`);
+});
+
+console.log("AUTH TOKENS: " + auth_tokens);
 
 server.start();
