@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "noImplicitUseStrict": true,
+    "esModuleInterop": true,
+  }
+}
