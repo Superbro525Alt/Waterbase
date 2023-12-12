@@ -1,14 +1,17 @@
 import {Server, createServer, addPage, addAPIEndpoint } from './server';
-import { generate_auth_token, validate_token } from './authentication';
+import { generate_auth_tokens, validate_token } from './authentication';
 import { get, set } from "./database";
-import { save_data, load_data } from "./persistance";
+import { save_data, load_data } from "./persistence";
 import { waterbase_version_html } from "./version";
+import { get_config } from "./config";
 
-const port: number = 3000;
+const config = get_config();
+
+const port: number = config.port;
 const server: Server = createServer(port);
-//const auth_tokens: Array<string> = generate_auth_tokens(100);
-const auth_tokens: Array<string> = ["V6TvuJ6IhaE7LavkJy4xJoPkNFuckTleuNpKslXjPTIWbcYLu0JvnNV8dLzRD8fXN4uCEOhcr3yeyb4SiEiwVSSweRyGuuM8dPkk"];
-const save_file_path: string = "./save.json";
+let auth_tokens: Array<string> = generate_auth_tokens(4);
+auth_tokens = auth_tokens.concat(config.persistent_auth_tokens);
+const save_file_path: string = config.save_file_path;
 
 let data: object = {};
 
