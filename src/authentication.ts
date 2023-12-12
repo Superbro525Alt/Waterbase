@@ -3,7 +3,7 @@ export function validate_token(token: string, valid_tokens: Array<string>): bool
     return valid_tokens.indexOf(token) != -1;
 }
 
-function generate_auth_tokens(amt: number = 10, length: number = 10, parts: Array<string | number> | null = null): Array<string> {
+export function generate_auth_tokens(amt: number = 10, length: number = 10, parts: Array<string | number> | null = null): Array<string> {
     let tokens: Array<string> = [];
 
     for (let i = 0; i < amt; i++) {

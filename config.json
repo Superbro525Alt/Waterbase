@@ -1,0 +1,5 @@
+{
+    "port": 8080,
+    "persistent_auth_tokens": ["test"],
+    "save_file_path": "./save.json"
+}
