@@ -11,6 +11,8 @@ let auth_tokens: Array<string> = ["V6TvuJ6IhaE7LavkJy4xJoPkNFuckTleuNpKslXjPTIWb
 
 let data: object = {};
 
+let save_file_path: string = "./save.json";
+
 addAPIEndpoint(server, '/data', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
         res.send(data);
@@ -79,6 +81,30 @@ addAPIEndpoint(server, '/delete', (_req: any, res: any) => {
     }
 });
 
+addAPIEndpoint(server, '/load_from_file', (_req: any, res: any) => {
+    if (validate_token(_req.query.token, auth_tokens)) {
+        data = load_data(save_file_path);
+
+        res.send(data);
+        res.status(200);
+    } else {
+        res.send("Invalid token");
+        res.status(401);
+    }
+});
+
+addAPIEndpoint(server, '/save_to_file', (_req: any, res: any) => {
+    if (validate_token(_req.query.token, auth_tokens)) {
+        save_data(save_file_path, data);
+
+        res.send(data);
+        res.status(200);
+    } else {
+        res.send("Invalid token");
+        res.status(401);
+    }
+});
+
 server._server.get('/', (_req: any, res: any) => {
     res.send(`
 <!DOCTYPE html>
@@ -107,10 +133,39 @@ ${JSON.stringify(server.ip_data, null, 4)}
     
     <p>Data:</p>
     <pre>${JSON.stringify(data, null, 4)}</pre>
+    
+    <button onclick="fetch('/load_from_file?token=${auth_tokens[0]}');window.location.reload();">Load data from file</button>
+    
+    <br/>
+    <br/>
+    
+    <button onclick="fetch('/save_to_file?token=${auth_tokens[0]}';window.location.reload())">Save data to file</button>
+    
+    <p>Endpoints:</p>
+    
+    <ul>
+        <li>/data</li>
+        <li>/set</li>
+        <li>/get</li>
+        <li>/delete</li>
+        <li>/load_from_file</li>
+        <li>/save_to_file</li>
+    </ul>
     </body>
 <style>
     body {
         font-family: sans-serif;
+    }
+    
+    button {
+        font-size: 1.5em;
+        background-color: #4CAF50;
+        border: none;
+        transition: background-color 0.4s ease;
+    }
+    
+    button:hover {
+        background-color: #3e8e41;
     }
 </style>
 </html>
