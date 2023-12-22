@@ -1,5 +1,5 @@
-import { Server } from 'waterbase_sdk';
+import * as waterbase from '../../../ts/src/index';
 
-const server: Server = new Server("http://localhost:3000", "test");
+const Server = new waterbase.MultiplayerServer("http://localhost:3000", "test");
 
-server.set("test", "test");
+Server.createPlayer("test", { x: 0, y: 0, z: 0 });

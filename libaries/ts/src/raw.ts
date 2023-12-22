@@ -1,4 +1,4 @@
-class Server {
+class RawServer {
     private url: string;
     private auth: string;
 
@@ -48,6 +48,7 @@ class Server {
             method: 'PUT'
         }).then((response) => {
             // error code
+            console.log(this.url + "/set")
             if (response.status != 200) {
                 throw new Error(response.statusText);
             }
@@ -113,4 +114,4 @@ class Server {
     }
 }
 
-export { Server };
+export { RawServer };
