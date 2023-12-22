@@ -43,6 +43,18 @@ export function addPage(server: Server, path: string, page: string) {
     });
 }
 
-export function addAPIEndpoint(server: Server, path: string, callback: any) {
+export function GetEndpoint(server: Server, path: string, callback: any) {
     server._server.get(path, callback);
+}
+
+export function PostEndpoint(server: Server, path: string, callback: any) {
+    server._server.post(path, callback);
+}
+
+export function PutEndpoint(server: Server, path: string, callback: any) {
+    server._server.put(path, callback);
+}
+
+export function DeleteEndpoint(server: Server, path: string, callback: any) {
+    server._server.delete(path, callback);
 }

@@ -1,4 +1,12 @@
-import {Server, createServer, addPage, addAPIEndpoint } from './server';
+import {
+    Server,
+    createServer,
+    addPage,
+    GetEndpoint,
+    PutEndpoint,
+    DeleteEndpoint,
+    PostEndpoint
+} from './server';
 import { generate_auth_tokens, validate_token } from './authentication';
 import { get, set } from "./database";
 import { save_data, load_data } from "./persistence";
@@ -16,7 +24,7 @@ const save_file_path: string = config.save_file_path;
 let data: object = {};
 
 
-addAPIEndpoint(server, '/data', (_req: any, res: any) => {
+GetEndpoint(server, '/data', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
         res.send(data);
         res.status(200)
@@ -26,7 +34,7 @@ addAPIEndpoint(server, '/data', (_req: any, res: any) => {
     }
 });
 
-addAPIEndpoint(server, '/set', (_req: any, res: any) => {
+PutEndpoint(server, '/set', (_req: any, res: any) => {
     console.log(validate_token(_req.query.token, auth_tokens))
     console.log(_req.query.token);
     console.log(auth_tokens)
@@ -47,7 +55,7 @@ addAPIEndpoint(server, '/set', (_req: any, res: any) => {
     }
 });
 
-addAPIEndpoint(server, '/get', (_req: any, res: any) => {
+GetEndpoint(server, '/get', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
         let path =  _req.query.path;
 
@@ -68,7 +76,7 @@ addAPIEndpoint(server, '/get', (_req: any, res: any) => {
     }
 });
 
-addAPIEndpoint(server, '/delete', (_req: any, res: any) => {
+DeleteEndpoint(server, '/delete', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
         let path: string = _req.query.path;
 
@@ -84,7 +92,7 @@ addAPIEndpoint(server, '/delete', (_req: any, res: any) => {
     }
 });
 
-addAPIEndpoint(server, '/load_from_file', (_req: any, res: any) => {
+PostEndpoint(server, '/load_from_file', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
         data = load_data(save_file_path);
 
@@ -96,7 +104,7 @@ addAPIEndpoint(server, '/load_from_file', (_req: any, res: any) => {
     }
 });
 
-addAPIEndpoint(server, '/save_to_file', (_req: any, res: any) => {
+PostEndpoint(server, '/save_to_file', (_req: any, res: any) => {
     if (validate_token(_req.query.token, auth_tokens)) {
         save_data(save_file_path, data);
 
