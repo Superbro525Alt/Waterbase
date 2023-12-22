@@ -1,0 +1,13 @@
+{
+  "name": "waterbase",
+  "version": "0.0.1",
+  "description": "API for a waterbase server",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "dependencies": {
+    "waterbase": "^0.0.2"
+  }
+}
