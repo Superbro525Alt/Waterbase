@@ -1,0 +1,14 @@
+{
+	"scripts": {
+		"dev": "npx ts-node src/main.ts",
+		"build": "tsc",
+		"start": "node dist/main.js"
+	},
+	"devDependencies": {
+		"@types/node": "^20.9.0",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"waterbase_sdk": "^0.0.1"
+	}
+}

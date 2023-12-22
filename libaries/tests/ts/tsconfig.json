@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "noImplicitUseStrict": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "ignoreDeprecations": "5.0",
+  },
+}
