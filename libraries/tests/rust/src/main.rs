@@ -11,7 +11,5 @@ fn main() -> Result<(), Box<dyn Error>> {
     let data = raw_server.data()?;
     println!("Data: {:?}", data);
 
-    // Add similar calls for other functions as needed
-
     Ok(())
 }
