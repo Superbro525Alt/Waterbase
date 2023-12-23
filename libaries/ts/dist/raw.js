@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Server = void 0;
-class Server {
+exports.RawServer = void 0;
+class RawServer {
     constructor(url, auth) {
         this.url = url;
         this.auth = auth;
@@ -44,6 +44,7 @@ class Server {
             method: 'PUT'
         }).then((response) => {
             // error code
+            console.log(this.url + "/set");
             if (response.status != 200) {
                 throw new Error(response.statusText);
             }
@@ -104,4 +105,4 @@ class Server {
         });
     }
 }
-exports.Server = Server;
+exports.RawServer = RawServer;

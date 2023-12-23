@@ -2,8 +2,6 @@ class RawServer {
     private url: string;
     private auth: string;
 
-    private fetch_path: string;
-
     constructor(url: string, auth: string) {
         this.url = url;
         this.auth = auth;
