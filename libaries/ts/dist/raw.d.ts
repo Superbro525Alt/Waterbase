@@ -1,4 +1,4 @@
-declare class Server {
+declare class RawServer {
     private url;
     private auth;
     private fetch_path;
@@ -11,4 +11,4 @@ declare class Server {
     save(): Promise<boolean>;
     load(): Promise<boolean>;
 }
-export { Server };
+export { RawServer };

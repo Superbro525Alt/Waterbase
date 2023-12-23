@@ -145,12 +145,12 @@ ${JSON.stringify(server.ip_data, null, 4)}
     <p>Data:</p>
     <pre>${JSON.stringify(data, null, 4)}</pre>
     
-    <button onclick="fetch('/load_from_file?token=${auth_tokens[0]}');window.location.reload();">Load data from file</button>
+    <button onclick="fetch('/load_from_file?token=${auth_tokens[0]}',{method: 'POST'});window.location.reload();">Load data from file</button>
     
     <br/>
     <br/>
     
-    <button onclick="fetch('/save_to_file?token=${auth_tokens[0]}';window.location.reload())">Save data to file</button>
+    <button onclick="fetch('/save_to_file?token=${auth_tokens[0]}',{method: 'POST'});window.location.reload()">Save data to file</button>
     
     <p>Endpoints:</p>
     
