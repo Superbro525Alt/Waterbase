@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <cpr/cpr.h>
 #include <vector>

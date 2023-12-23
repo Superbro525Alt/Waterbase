@@ -10,18 +10,26 @@ setup:
 
 build:
 	@echo "Building..."
-	g++ -c src/cpp/waterbase.cpp -o build/waterbase.o
+	g++ -c src/cpp/raw.cpp -o build/raw.o
 	g++ -c src/cpp/requests.cpp -o build/requests.o
+	g++ -c src/cpp/multiplayer.cpp -o build/multiplayer.o
 
 create:
 	@echo "Creating..."
-	ar -rcs lib/libwaterbase.a build/waterbase.o
+	ar -rcs lib/libraw.a build/raw.o
 	ar -rcs lib/librequests.a build/requests.o
+	ar -rcs lib/libmultiplayer.a build/multiplayer.o
 
 install:
 	@echo "Installing..."
-	sudo cp lib/libwaterbase.a /usr/local/lib
-	sudo cp lib/librequests.a /usr/local/lib
 
-	sudo cp src/include/waterbase.h /usr/local/include
-	sudo cp src/include/requests.h /usr/local/include
+	sudo mkdir -p /usr/local/lib/waterbase
+	sudo mkdir -p /usr/local/include/waterbase
+
+	sudo cp lib/libraw.a /usr/local/lib/waterbase
+	sudo cp lib/librequests.a /usr/local/lib/waterbase
+	sudo cp lib/libmultiplayer.a /usr/local/lib/waterbase
+
+	sudo cp src/include/raw.h /usr/local/include/waterbase
+	sudo cp src/include/requests.h /usr/local/include/waterbase
+	sudo cp src/include/multiplayer.h /usr/local/include/waterbase

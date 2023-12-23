@@ -1,5 +1,7 @@
-// include string
+#pragma once
+
 #include <string>
+
 
 class RawServer
 {
@@ -19,4 +21,17 @@ class RawServer
     private:
         std::string auth;
         std::string url;
+};
+
+class NetworkObject
+{
+    public:
+        NetworkObject(RawServer *server, std::string path, std::string *data);
+        ~NetworkObject();
+
+        void set();
+
+        std::string path;
+        std::string *data;
+        RawServer *server;
 };
