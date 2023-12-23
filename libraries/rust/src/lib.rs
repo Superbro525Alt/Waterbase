@@ -13,7 +13,7 @@ impl RawServer {
         // remove any trailing slashes
         url = url.trim_end_matches('/').to_string();
         if !parameters.is_empty() {
-            url.push_str("?");
+            url.push('?');
             for (key, value) in parameters {
                 url.push_str(&format!("{}={}&", key, value));
             }
