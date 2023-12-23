@@ -1,6 +1,9 @@
-#include "../include/waterbase.h"
+#include "../include/raw.h"
 #include "../include/requests.h"
+
 #include <cpr/cpr.h>
+
+
 
 RawServer::RawServer(std::string url, std::string auth)
 {
@@ -81,4 +84,21 @@ std::string RawServer::load()
     std::string query = complete_url(url + "/load_from_file", parameters);
 
     return POST(query);
+}
+
+NetworkObject::NetworkObject(RawServer *server, std::string path, std::string *data)
+{
+    this->server = server;
+    this->path = path;
+    this->data = data;
+}
+
+NetworkObject::~NetworkObject()
+{
+
+}
+
+void NetworkObject::set()
+{
+    server->set(path, *data);
 }

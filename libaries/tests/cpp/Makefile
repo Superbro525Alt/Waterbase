@@ -12,7 +12,7 @@ build-lib:
 
 build:
 	@echo "Building..."
-	g++ src/main.cpp -o build/waterbase_test.out -Isrc/include -Llib -lwaterbase -lrequests -lcpr
+	g++ src/main.cpp -o build/waterbase_test.out -L/usr/local/lib/waterbase -Iwaterbase -lraw -lrequests -lmultiplayer -lcpr
 
 run:
 	@echo "Running..."
