@@ -1,7 +1,12 @@
-.PHONY: all build create install
+.PHONY: setup all build create install
 
 
-all: build create install
+all: setup build create install
+
+setup:
+	@echo "Setting up..."
+	mkdir -p build
+	mkdir -p lib
 
 build:
 	@echo "Building..."

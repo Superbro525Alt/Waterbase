@@ -1,6 +1,10 @@
 .PHONY: all build run
 
-all: build-lib build run
+all: setup build-lib build run
+
+setup:
+	@echo "Setting up..."
+	mkdir -p build
 
 build-lib:
 	@echo "Building Library..."
