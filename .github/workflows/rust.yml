@@ -60,7 +60,7 @@ jobs:
       - name: Run cargo test
         run: cargo test
 
-      - name: Run cargo test
+      - name: Run cargo test features async
         run: cargo test --features async
 
   lints_lib:
@@ -118,7 +118,7 @@ jobs:
       - name: Run cargo build
         run: cargo build
 
-      - name: Run cargo build
+      - name: Run cargo build features async
         run: cargo build --features async
 
   format_lib:
@@ -146,8 +146,5 @@ jobs:
           override: true
           components: rustfmt
 
-      - name: Run cargo build
+      - name: Run fmt
         run: cargo fmt --check
-
-      - name: Run cargo build
-        run: cargo fmt --check --features async
