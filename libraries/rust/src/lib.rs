@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use reqwest::{blocking::Client, header::CONTENT_TYPE};
+use reqwest::header::CONTENT_TYPE;
 use std::collections::HashMap;
 
 pub struct RawServer {
@@ -7,7 +7,6 @@ pub struct RawServer {
     pub auth: String,
 }
 
-#[cfg(not(feature = "async"))]
 impl RawServer {
     fn complete_url(&self, path: &str, parameters: HashMap<&str, &str>) -> String {
         let mut url = format!("{}{}", self.url, path);
@@ -23,7 +22,14 @@ impl RawServer {
         url.pop();
         url
     }
+}
 
+
+#[cfg(not(feature = "async"))]
+use reqwest::blocking::Client as SyncClient;
+
+#[cfg(not(feature = "async"))]
+impl RawServer {
     pub fn make_request(
         &self,
         method: &str,
@@ -32,7 +38,7 @@ impl RawServer {
     ) -> Result<String> {
         let url = self.complete_url(path, parameters);
 
-        let client = Client::new();
+        let client = SyncClient::new();
         let request = match method {
             "GET" => client.get(&url),
             "PUT" => client.put(&url),
@@ -90,6 +96,9 @@ impl RawServer {
 }
 
 #[cfg(feature = "async")]
+use reqwest::Client as AsyncClient;
+
+#[cfg(feature = "async")]
 impl RawServer {
     pub async fn make_request(
         &self,
@@ -97,9 +106,9 @@ impl RawServer {
         path: &str,
         parameters: HashMap<&str, &str>,
     ) -> Result<String> {
-        let url = server.complete_url(path, parameters);
+        let url = self.complete_url(path, parameters);
 
-        let client = Client::new();
+        let client = AsyncClient::new();
         let request = match method {
             "GET" => client.get(&url),
             "PUT" => client.put(&url),
@@ -118,43 +127,46 @@ impl RawServer {
     pub async fn get(&self, path: &str) -> Result<String> {
         let mut parameters = HashMap::new();
         parameters.insert("path", path);
-        parameters.insert("token", &*server.auth);
-        server.make_request("GET", path, parameters)
+        parameters.insert("token", &*self.auth);
+
+        self.make_request("GET", path, parameters).await
     }
 
     pub async fn set(&self, path: &str, value: &str) -> Result<String> {
         let mut parameters = HashMap::new();
         parameters.insert("path", path);
         parameters.insert("value", value);
-        parameters.insert("token", &*server.auth);
-        server.make_request("PUT", path, parameters)
+        parameters.insert("token", &*self.auth);
+
+        self.make_request("PUT", path, parameters).await
     }
 
     pub async fn del(&self, path: &str) -> Result<String> {
         let mut parameters = HashMap::new();
         parameters.insert("path", path);
-        parameters.insert("token", &*server.auth);
+        parameters.insert("token", &*self.auth);
 
-        server.make_request("DELETE", path, parameters)
+        self.make_request("DELETE", path, parameters).await
     }
 
     pub async fn data(&self) -> Result<String> {
         let mut parameters = HashMap::new();
-        parameters.insert("token", &*server.auth);
-        server.make_request("GET", "/data", parameters)
+        parameters.insert("token", &*self.auth);
+
+        self.make_request("GET", "/data", parameters).await
     }
 
     pub async fn save(&self) -> Result<String> {
         let mut parameters = HashMap::new();
-        parameters.insert("token", &*server.auth);
+        parameters.insert("token", &*self.auth);
 
-        server.make_request("POST", "/save_to_file", parameters)
+        self.make_request("POST", "/save_to_file", parameters).await
     }
 
     pub async fn load(&self) -> Result<String> {
         let mut parameters = HashMap::new();
-        parameters.insert("token", &*server.auth);
+        parameters.insert("token", &*self.auth);
 
-        server.make_request("POST", "/load_from_file", parameters)
+        self.make_request("POST", "/load_from_file", parameters).await
     }
 }

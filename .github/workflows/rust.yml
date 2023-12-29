@@ -30,6 +30,9 @@ jobs:
       - name: Run cargo check
         run: cargo check
 
+      - name: Run cargo check async feature
+        run: cargo check --features async
+
   test_lib:
     strategy:
       fail-fast: false
@@ -56,6 +59,9 @@ jobs:
 
       - name: Run cargo test
         run: cargo test
+
+      - name: Run cargo test
+        run: cargo test --features async
 
   lints_lib:
     strategy:
@@ -85,6 +91,10 @@ jobs:
       - name: Run cargo clippy
         run: cargo clippy -- -D warnings
 
+      - name: Run cargo clippy
+        run: cargo clippy -- -D warnings --features async
+
+
   build_lib:
     strategy:
       fail-fast: false
@@ -111,6 +121,9 @@ jobs:
 
       - name: Run cargo build
         run: cargo build
+
+      - name: Run cargo build
+        run: cargo build --features async
 
   format_lib:
     strategy:
@@ -139,3 +152,6 @@ jobs:
 
       - name: Run cargo build
         run: cargo fmt --check
+
+      - name: Run cargo build
+        run: cargo fmt --check --features async
