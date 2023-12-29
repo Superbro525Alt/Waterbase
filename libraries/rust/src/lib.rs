@@ -24,7 +24,6 @@ impl RawServer {
     }
 }
 
-
 #[cfg(not(feature = "async"))]
 use reqwest::blocking::Client as SyncClient;
 
@@ -167,6 +166,7 @@ impl RawServer {
         let mut parameters = HashMap::new();
         parameters.insert("token", &*self.auth);
 
-        self.make_request("POST", "/load_from_file", parameters).await
+        self.make_request("POST", "/load_from_file", parameters)
+            .await
     }
 }

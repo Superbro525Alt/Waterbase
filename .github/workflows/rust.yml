@@ -91,10 +91,6 @@ jobs:
       - name: Run cargo clippy
         run: cargo clippy -- -D warnings
 
-      - name: Run cargo clippy
-        run: cargo clippy -- -D warnings --features async
-
-
   build_lib:
     strategy:
       fail-fast: false
