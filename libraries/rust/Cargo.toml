@@ -7,6 +7,9 @@ edition = "2021"
 anyhow = "1.0.76"
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 
+[features]
+async = []
+
 [lib]
 name = "waterbase"
 path = "src/lib.rs"
