@@ -55,7 +55,6 @@ jobs:
           override: true
 
       - name: Run cargo test
-        working-directory: libaries/rust
         run: cargo test
 
   lints_lib:
