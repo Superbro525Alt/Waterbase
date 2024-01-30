@@ -1,16 +1,24 @@
 on: [push, pull_request]
 
-name: Rust Lib
+name: Rust CI
 
 jobs:
   check_lib:
-    name: Check Lib
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+          - os: windows-latest
+    name: "Check Library on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./libraries/rust
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          path: libaries/rust  # Specify the path to your Rust project
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -20,17 +28,27 @@ jobs:
           override: true
 
       - name: Run cargo check
-        working-directory: libaries/rust  # Specify the path to your Rust project
         run: cargo check
+
+      - name: Run cargo check async feature
+        run: cargo check --features async
 
   test_lib:
-    name: Test Suite Lib
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+          - os: windows-latest
+    name: "Test Library on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./libraries/rust
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          path: libaries/rust  # Specify the path to your Rust project
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -40,17 +58,27 @@ jobs:
           override: true
 
       - name: Run cargo test
-        working-directory: libaries/rust  # Specify the path to your Rust project
         run: cargo test
+
+      - name: Run cargo test features async
+        run: cargo test --features async
 
   lints_lib:
-    name: Lints Lib
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+          - os: windows-latest
+    name: "Lint Library on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./libraries/rust
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          path: libaries/rust  # Specify the path to your Rust project
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -58,24 +86,27 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-          components: rustfmt, clippy
-
-      - name: Run cargo fmt
-        working-directory: libaries/rust  # Specify the path to your Rust project
-        run: cargo fmt --all -- --check
+          components: clippy
 
       - name: Run cargo clippy
-        working-directory: libaries/rust  # Specify the path to your Rust project
         run: cargo clippy -- -D warnings
 
-  check_tests:
-    name: Check Tests
-    runs-on: ubuntu-latest
+  build_lib:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+          - os: windows-latest
+    name: "Build Library on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./libraries/rust
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          path: libaries/tests/rust  # Specify the path to your Rust test project
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -84,18 +115,28 @@ jobs:
           toolchain: stable
           override: true
 
-      - name: Run cargo check
-        working-directory: libaries/tests/rust  # Specify the path to your Rust test project
-        run: cargo check
+      - name: Run cargo build
+        run: cargo build
 
-  test_tests:
-    name: Test Suite Tests
-    runs-on: ubuntu-latest
+      - name: Run cargo build features async
+        run: cargo build --features async
+
+  format_lib:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+          - os: macos-latest
+          - os: windows-latest
+    name: "Format Library on ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./libraries/rust
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          path: libaries/tests/rust  # Specify the path to your Rust test project
+        uses: actions/checkout@v4
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
@@ -103,32 +144,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+          components: rustfmt
 
-      - name: Run cargo test
-        working-directory: libaries/tests/rust  # Specify the path to your Rust test project
-        run: cargo test
-
-  lints_tests:
-    name: Lints Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
-        with:
-          path: libaries/tests/rust  # Specify the path to your Rust test project
-
-      - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt, clippy
-
-      - name: Run cargo fmt
-        working-directory: libaries/tests/rust  # Specify the path to your Rust test project
-        run: cargo fmt --all -- --check
-
-      - name: Run cargo clippy
-        working-directory: libaries/tests/rust  # Specify the path to your Rust test project
-        run: cargo clippy -- -D warnings
+      - name: Run fmt
+        run: cargo fmt --check
